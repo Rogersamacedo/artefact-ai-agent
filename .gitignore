@@ -1,0 +1,32 @@
+# Ambiente Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+
+# Segredos e configurações locais
+.env
+.env.*
+!.env.example
+
+# Arquivos originais e extração redundante
+Desafio_Técnico_AI_Engineer_2026-20260616T150750Z-3-001.zip
+extracao/
+
+# Arquivos temporários
+*.log
+.DS_Store
+
+# Configurações locais do editor
+.vscode/
+
+# Cópias de segurança
+*.bak
+
+# Arquivo compactado original
+*.zip
+
+# Extração redundante
+extracao/
+
