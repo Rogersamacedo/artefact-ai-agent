@@ -176,22 +176,31 @@ O protótipo não implementa autenticação real de clientes.
 - Não há integração com sistemas externos de pedidos, pagamentos ou logística.
 - Não existe autenticação de clientes ou autorização de acesso a pedidos.
 - O cálculo de preços promocionais depende da correção dos dados de promoção e de suas regras de aplicação.
-- A solução ainda precisa ser validada por meio de testes funcionais e de cenários de erro antes de ser considerada pronta para uso.
+- A validação funcional realizada até o momento cobre a busca específica e ampla de produtos, a consulta de uma política comercial e a recusa de acessórios fora do escopo. Outros cenários ainda precisam ser verificados.
 
 ## 10. Testes e validação
 
-A validação final deve cobrir, no mínimo:
+### Testes executados
 
-1. Inicialização da aplicação.
-2. Busca de produtos existentes e inexistentes.
-3. Consulta de preços e disponibilidade.
-4. Consulta de promoções ativas e ausência de promoções.
-5. Respostas sobre as políticas comerciais.
-6. Perguntas fora do escopo.
-7. Proteção das informações de pedidos.
-8. Perguntas vazias e encerramento da conversa.
+- Compilação sintática de `agent.py` com `python -m py_compile agent.py`.
+- Consulta ao catálogo: busca por produtos Yamaha.
+- Consulta específica de produto: Yamaha C40 Nylon Natural, ID 81, preço de R$ 599,90 e estoque de 12 unidades.
+- Consulta à política de troca e devolução.
+- Teste funcional de busca específica pelo Yamaha C40, retornando somente o modelo solicitado.
+- Teste funcional de busca ampla por violões Yamaha, retornando cinco modelos.
+- Teste de pergunta fora do escopo comercial, sobre venda de cordas para violão.
 
-Os resultados dos testes devem ser registrados após a execução da bateria de validação.
+Os resultados acima foram observados durante a execução local do protótipo. Os exemplos de conversa correspondentes estão registrados em `examples.md`.
+
+### Cenários ainda a verificar
+
+- Busca por produtos inexistentes.
+- Promoções ativas e produtos sem promoção.
+- Perguntas vazias e encerramento da interface.
+- Proteção de informações de pedidos.
+- Outros cenários de erro e consistência das respostas.
+
+Os testes descritos como pendentes não devem ser considerados aprovados.
 
 ## 11. Uso de assistentes de inteligência artificial
 
@@ -220,4 +229,4 @@ O projeto apresenta uma solução modular de atendimento baseada em Python, dado
 
 A prioridade é oferecer respostas consistentes com as fontes disponíveis, manter o código simples de executar e reconhecer explicitamente os limites do protótipo.
 
-A versão final deverá ser acompanhada dos resultados dos testes funcionais e da verificação dos requisitos do desafio.
+A entrega documenta os testes funcionais já executados e identifica explicitamente os cenários que ainda precisam de verificação.

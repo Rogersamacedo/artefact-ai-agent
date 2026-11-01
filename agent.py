@@ -29,67 +29,83 @@ def formatar_moeda(valor: float) -> str:
 
 
 def buscar_produtos_na_mensagem(mensagem: str) -> list[dict]:
-    """Busca produtos usando palavras relevantes da pergunta."""
+    """Busca produtos e prioriza correspondências específicas no nome."""
     palavras_ignoradas = {
-        "vocês", "voces", "tem", "têm", "vende", "vendem",
-        "quero", "comprar", "procuro", "quanto", "custa",
-        "preco", "produto", "produtos", "instrumento",
-        "instrumentos", "me", "um", "uma", "uns", "umas",
+        "voces", "tem", "vende", "vendem", "quero", "comprar",
+        "procuro", "quanto", "custa", "preco", "produto", "produtos",
+        "instrumento", "instrumentos", "me", "um", "uma", "uns", "umas",
         "de", "do", "da", "dos", "das", "o", "a", "os", "as",
-        "e", "por", "favor", "qual", "quais", "no", "na",
-        "nos", "nas", "com", "para", "temos", "estoque",
-        "disponivel", "disponibilidade", "promocao",
-        "promocoes", "desconto", "descontos", "valor",
-        "gostaria", "saber", "existe", "existem", "hoje",
-        "esse", "essa", "isso", "ele", "ela", "quanto",
+        "e", "por", "favor", "qual", "quais", "no", "na", "nos", "nas",
+        "com", "para", "temos", "estoque", "disponivel",
+        "disponibilidade", "promocao", "promocoes", "desconto",
+        "descontos", "valor", "gostaria", "saber", "existe", "existem",
+        "hoje", "esse", "essa", "isso", "ele", "ela",
     }
 
     palavras = re.findall(r"[A-Za-zÀ-ÿ0-9]+", mensagem)
-
     termos = []
-    for palavra in palavras:
-        termo_normalizado = normalizar(palavra)
 
+    for palavra in palavras:
+        termo = normalizar(palavra)
         if (
-            len(termo_normalizado) >= 3
-            and termo_normalizado not in palavras_ignoradas
-            and termo_normalizado not in termos
+            len(termo) >= 3
+            and termo not in palavras_ignoradas
+            and termo not in termos
         ):
-            termos.append(termo_normalizado)
+            termos.append(termo)
 
     candidatos = {}
 
     for termo in termos:
         resultados = buscar_produtos(termo)
 
-        # Se a busca sem acentos não encontrar resultados,
-        # tenta novamente com a grafia original.
         if not resultados:
-            palavra_original = next(
-                (
-                    palavra
-                    for palavra in palavras
-                    if normalizar(palavra) == termo
-                ),
+            original = next(
+                (p for p in palavras if normalizar(p) == termo),
                 termo,
             )
-            resultados = buscar_produtos(palavra_original)
+            resultados = buscar_produtos(original)
 
         for produto in resultados:
-            product_id = produto["product_id"]
-
+            pid = produto["product_id"]
             nome = normalizar(produto["name"])
             descricao = normalizar(produto["description"])
 
-            pontuacao = 3 if termo in nome else 1
+            pontuacao = 0
+            if termo in nome:
+                pontuacao += 3
+            elif termo in descricao:
+                pontuacao += 1
 
-            if product_id not in candidatos:
-                candidatos[product_id] = {
+            if pid not in candidatos:
+                candidatos[pid] = {
                     "produto": produto,
                     "pontuacao": 0,
+                    "termos_no_nome": set(),
                 }
 
-            candidatos[product_id]["pontuacao"] += pontuacao
+            candidatos[pid]["pontuacao"] += pontuacao
+
+            if termo in nome:
+                candidatos[pid]["termos_no_nome"].add(termo)
+
+    if not candidatos:
+        return []
+
+    # Quando marca e modelo aparecem juntos no nome, prioriza
+    # exclusivamente os produtos que correspondem aos dois.
+    if len(termos) >= 2:
+        correspondencias_exatas = [
+            item["produto"]
+            for item in candidatos.values()
+            if all(
+                termo in normalizar(item["produto"]["name"])
+                for termo in termos
+            )
+        ]
+
+        if correspondencias_exatas:
+            return correspondencias_exatas[:5]
 
     ordenados = sorted(
         candidatos.values(),
@@ -98,7 +114,6 @@ def buscar_produtos_na_mensagem(mensagem: str) -> list[dict]:
     )
 
     return [item["produto"] for item in ordenados[:5]]
-
 
 def responder(mensagem: str) -> str:
     """Responde a perguntas sobre produtos e políticas da loja."""

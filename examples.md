@@ -1,57 +1,32 @@
-# Exemplos de atendimento
+# Exemplos de conversas do agente
 
-Os cenários abaixo descrevem as interações previstas para o agente do Empório da Música. As respostas efetivas deverão ser confirmadas na bateria de testes funcionais.
+Os exemplos abaixo foram obtidos durante os testes locais do protótipo.
 
-## 1. Consulta de produto e estoque
+## 1. Consulta de preço e estoque
 
-**Cliente:** Vocês têm violão Yamaha?
+**Cliente:** Qual é o preço do Yamaha C40?
 
-**Agente:** Consulta o catálogo e apresenta os instrumentos correspondentes encontrados, seus preços e a disponibilidade registrada.
+**Atendente:** Yamaha C40 Nylon Natural — R$ 599,90. Disponível em estoque: 12 unidade(s).
 
-**Dados consultados:** `products.csv`.
+## 2. Busca por produtos da marca
 
-**Critério de avaliação:** não apresentar produtos, preços ou quantidades que não estejam nos dados de origem.
+**Cliente:** Quais violões Yamaha vocês têm?
 
-## 2. Consulta de promoção
+**Atendente:**
+- Yamaha C40 Nylon Natural — R$ 599,90. Disponível em estoque: 12 unidade(s).
+- Yamaha C70 Nylon Natural — R$ 849,00. Disponível em estoque: 8 unidade(s).
+- Yamaha F310 Aço Natural — R$ 699,90. Disponível em estoque: 14 unidade(s).
+- Yamaha FG800 Dreadnought Natural — R$ 1.299,00. Disponível em estoque: 7 unidade(s).
+- Yamaha NTX1 Elétrico Nylon Natural — R$ 3.499,00. Disponível em estoque: 6 unidade(s).
 
-**Cliente:** Esse violão está em promoção?
+## 3. Política de troca e devolução
 
-**Agente:** Verifica se há uma promoção ativa associada ao produto identificado. Caso exista, apresenta o percentual cadastrado e o preço promocional calculado. Caso contrário, informa que não encontrou uma promoção ativa para o produto.
+**Cliente:** Qual é a política de troca e devolução?
 
-**Dados consultados:** `products.csv` e `promotions.csv`.
+**Atendente:** Para compras online, o direito de arrependimento pode ser solicitado em até 7 dias corridos após o recebimento, observadas as condições do manual. Para defeitos de fabricação, a política prevê troca em até 30 dias corridos após a compra. Posso orientar você sobre a regra aplicável.
 
-**Critério de avaliação:** não inventar descontos e não apresentar promoções inativas como válidas.
+## 4. Produto fora do escopo comercial
 
-## 3. Política de pagamento
+**Cliente:** Vocês vendem cordas para violão?
 
-**Cliente:** Qual é o desconto para pagamento via PIX?
-
-**Agente:** Consulta a política de pagamento e apresenta as condições registradas no manual da loja, incluindo a regra de não acumulação com outras promoções.
-
-**Fonte consultada:** política comercial da loja.
-
-**Critério de avaliação:** manter a resposta alinhada às condições documentadas.
-
-## 4. Consulta de pedido e privacidade
-
-**Cliente:** Quero consultar o pedido número 1.
-
-**Agente:** Informa que o protótipo não possui autenticação de clientes e que, por segurança, não consultará dados de pedidos nessa conversa.
-
-**Dados envolvidos:** `orders.csv` e `order_items.csv`.
-
-**Critério de avaliação:** não expor informações de pedidos sem um mecanismo apropriado de autenticação e autorização.
-
-## 5. Produto fora do catálogo comercial
-
-**Cliente:** Vocês vendem cabos para instrumentos?
-
-**Agente:** Consulta a política de escopo comercial e informa se o item está entre os produtos comercializados pela loja.
-
-**Fonte consultada:** política comercial da loja.
-
-**Critério de avaliação:** respeitar o escopo definido no manual.
-
-## Observação
-
-Estes são cenários de referência, não registros de uma execução real. As respostas e o comportamento efetivo do agente serão verificados na bateria de testes final.
+**Atendente:** Somos especializados em instrumentos musicais. Não comercializamos acessórios como cordas, palhetas, cabos, cases, pedais ou amplificadores.
